@@ -12,8 +12,7 @@ function Movies({ handleAddToWatchlist, handleRemoveToWatchlist, watchlist }) {
     url: `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${pageNo}`,
     headers: {
       accept: "application/json",
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiYjgyMTVlZTVjZDFhODRlOGFjYjc2MWIxNTFlNDgzZiIsIm5iZiI6MTc0MzY1NzYwNS4zMzQsInN1YiI6IjY3ZWUxYTg1NWYzYmQ3MjQyZTYyYTVlMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Rq-0p7RdzCbNjhu_C42bmqonIwRKtsuZPc0a9gE8Ajc",
+      Authorization: `Bearer ${import.meta.env.VITE_BEARER_TOKEN}`,
     },
   };
 
