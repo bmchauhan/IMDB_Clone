@@ -5,7 +5,6 @@ import axios from "axios";
 function Movies({ handleAddToWatchlist, handleRemoveToWatchlist, watchlist }) {
   const [movies, setMovies] = useState([]);
   const [pageNo, setPageNo] = useState(1);
-  const [loading, setLoading] = useState(false);
 
   const options = {
     method: "GET",
@@ -17,19 +16,15 @@ function Movies({ handleAddToWatchlist, handleRemoveToWatchlist, watchlist }) {
   };
 
   useEffect(() => {
-    setLoading(true);
     axios
       .request(options)
       .then((res) => {
         setMovies(res.data.results);
-        setLoading(false);
       })
       .catch((err) => {
         console.error(err);
-        setLoading(false);
       });
   }, [pageNo]);
-  const loadingSkeletons = new Array(20).fill(0);
 
   return (
     <div className="p-10 bg-gray-900 min-h-screen">
@@ -52,19 +47,22 @@ function Movies({ handleAddToWatchlist, handleRemoveToWatchlist, watchlist }) {
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex justify-center items-center mt-10 space-x-4">
+
+      <div className="flex justify-center items-center mt-12 space-x-4">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded disabled:opacity-50"
+          className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl shadow-md transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
           disabled={pageNo === 1}
           onClick={() => setPageNo((prev) => Math.max(prev - 1, 1))}
         >
           Previous
         </button>
 
-        <span className="text-white text-xl font-semibold">{pageNo}</span>
+        <span className="bg-gray-800 text-white px-4 py-2 rounded-xl font-semibold shadow-inner border border-gray-700">
+          {pageNo}
+        </span>
 
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded disabled:opacity-50"
+          className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl shadow-md transition-all duration-200"
           onClick={() => setPageNo((prev) => prev + 1)}
         >
           Next

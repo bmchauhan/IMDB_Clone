@@ -5,9 +5,12 @@ import Movies from "./components/Movies";
 import WatchList from "./components/WatchList";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Banner from "./components/Banner";
+import axios from "axios";
 
 function App() {
   const [watchlist, setwatchlist] = useState([]);
+
+  const [genrelist,setGenreList] = useState({});
 
   let handleAddToWatchlist = (movieObj) => {
     let newWatchList = [...watchlist, movieObj];
@@ -18,6 +21,7 @@ function App() {
     let filteredWatchList = watchlist.filter((movie) => {
       return movieObj.id != movie.id;
     });
+    localStorage.setItem("moviesApp", JSON.stringify(filteredWatchList));
     setwatchlist(filteredWatchList);
   };
 
@@ -28,6 +32,32 @@ function App() {
     }
     setwatchlist(JSON.parse(moviesFromLocalStorage));
   },[]);
+
+  const optionsGenere = {
+    method: "GET",
+    url: `https://api.themoviedb.org/3/genre/movie/list?language=en`,
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${import.meta.env.VITE_BEARER_TOKEN}`,
+    },
+  };
+
+  useEffect(() => {
+    axios
+      .request(optionsGenere)
+      .then((res) => {
+        const genresArray = res.data.genres;
+        const genresMap = {};
+        genresArray.forEach((genre) => {
+          genresMap[genre.id] = genre.name;
+        });
+        setGenreList(genresMap);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
   return (
     <>
       <BrowserRouter>
@@ -48,7 +78,7 @@ function App() {
           />
           <Route
             path="/watchlist"
-            element={<WatchList watchlist={watchlist} />}
+            element={<WatchList watchlist={watchlist} setwatchlist={setwatchlist} genrelist={genrelist} handleRemoveToWatchlist={handleRemoveToWatchlist}/>}
           />
         </Routes>
       </BrowserRouter>
